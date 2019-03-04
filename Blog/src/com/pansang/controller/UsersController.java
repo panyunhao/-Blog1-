@@ -41,7 +41,7 @@ public class UsersController {
 		Map<String, String> map=new HashMap<String, String>();
 		if(us!=null&&us.getUsId()!=0){
 			session.setAttribute("dqusers", us);			
-			System.out.println("后面麻烦做一个验证，未登录的都不能操作...额 好像也用不着。");
+			System.out.println("后面麻烦做一个验证，好像也用不着。");
 			System.out.println(us.getUsName()+"登录成功！");
 			map.put("status", "1");
 			map.put("message", "登录成功");									
