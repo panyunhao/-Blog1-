@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 映射器名字空间，即BlogMapper对象的完整路径名 -->
+<mapper namespace="com.pansang.mapper.LiuLanMapper">	
+		
+	<!--  新增记录  -->
+	<insert id="insertLiuLan" parameterType="com.pansang.entity.LiuLan">		
+    	insert into LiuLan(WZId,FKIP) values(#{wZId},#{FKIP})       		
+    </insert>
+    
+	<!--  根据IP搜索记录  -->
+	<select id="selectLiuLanByIp" parameterType="java.util.Map" resultType="int"> 
+		select count(*) from LiuLan where FKIP=#{fKIp} and WZId=#{wZId} 			
+    </select>
+    
+    
+    
+</mapper>

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 映射器名字空间，即BlogMapper对象的完整路径名 -->
+	<mapper namespace="com.pansang.mapper.WenZhangMapper">	
+		
+	<!--  新增记录  -->
+	<insert id="insertWenZhang"  parameterType="com.pansang.entity.WenZhang" >		
+    	insert into WenZhang(WZTitle,UsId,HeadImg,WZText,WZJJ,WZState,YC,WZurl,FBTime,See,Zan,BiaoQian)
+			values(#{wZTitle},#{users.usId},#{headImg},#{wZText},#{WZJJ},1,#{YC},#{wZurl,jdbcType=VARCHAR},#{fBTime},0,0,#{biaoQian})
+    </insert>
+		
+	<!--  修改记录  -->
+	<update id="updateWenZhang" parameterType="com.pansang.entity.WenZhang">
+    	update WenZhang
+    	<set>        		    		  
+    		<if test="wZTitle!=null">    			
+				WZTitle = #{wZTitle},		
+			</if>
+			<if test="headImg!=null">    			
+				HeadImg = #{headImg},		
+			</if>
+			<if test="wZText!=null">
+				WZText = #{wZText},
+			</if>
+			<if test="WZJJ!=null">    			
+				WZJJ = #{WZJJ},				
+			</if>
+			<if test="wZState!=null">
+				<if test="wZState!=0">
+					WZState = #{wZState},
+				</if>
+			</if>
+			<if test="YC!=null">
+				<if test="YC!=0">    			
+					YC = #{YC},				
+				</if>
+			</if>			
+  			<if test="wZurl!=null">    			
+				wZurl = #{wZurl},				
+			</if>
+			<if test="see!=null">
+				<if test="see!=0">				
+					See = #{see},
+				</if>
+			</if>
+			<if test="biaoQian!=null">
+				BiaoQian = #{biaoQian},
+			</if>
+			<if test="fBTime!=null">    			
+				fBTime = #{fBTime}			
+			</if>			  		  					
+    	</set>
+		where WZId=#{wZId}
+    </update>
+		
+	<!--  删除记录  -->
+	<delete id="deleteWenZhang" parameterType="int">		
+		delete from WenZhang where WZId=#{wZId}      	
+    </delete>  
+		
+	<!--  增加浏览数  -->
+    <update id="upWenZhangSee" parameterType="int">
+    	update WenZhang set
+			 See   = See+1
+		where WZId = #{wZId}		    	       	
+    </update>	
+		
+	<!--  增加点赞数  -->
+    <update id="dianZanWenZhang" parameterType="int">
+    	update WenZhang set
+			 Zan   = Zan+1
+		where WZId = #{wZId}		    	       	
+    </update>	
+    
+    <!--  取消点赞  -->
+    <update id="quXiaodianZanWenZhang" parameterType="int">
+    	update WenZhang set
+			 Zan   = Zan-1
+		where WZId = #{wZId}		    	       	
+    </update>
+	
+	<select id="selectWenZhangById" parameterType="int" resultMap="resMap_WenZhang"> 
+		select
+  		w.wZId,
+  		w.wZTitle,
+  		w.headImg,
+  		w.usId as uusId,
+  		u.usName,
+  		u.head,
+  		w.wZText,
+  		w.WZJJ,
+  		w.wZState,
+  		w.YC,
+  		w.wZurl,
+  		w.fBTime,
+  		w.see,
+  		w.zan,
+  		w.biaoQian,
+  		w.qt1,
+  		w.qt2,
+  		w.qt3
+		from WenZhang w,Users u WHERE w.usId=u.usId and w.WZId = #{wZId} 
+    </select>
+    
+    <select id="selectWenZhangMoHu" parameterType="java.util.Map" resultMap="resMap_WenZhang"> 
+		SELECT s2.* from(		
+		SELECT rownum rn,s1.* FROM(
+		SELECT
+			w.wZId,
+			w.wZTitle,
+			w.headImg,
+			w.usId as uusId,
+			u.usName,
+			u.head,
+			w.wZText,
+			w.WZJJ,
+			w.wZState,
+			w.YC,
+			w.wZurl,
+			w.fBTime,
+			w.see,
+			w.zan,
+			w.biaoQian,
+			w.qt1,
+			w.qt2,
+			w.qt3
+			from WenZhang w,Users u WHERE w.usId=u.usId and w.wZTitle LIKE '%${wZTitle}%' ORDER BY w.fbtime DESC
+			) s1 ) s2
+		WHERE s2.rn BETWEEN ${begin1} AND ${end1}
+    </select>
+    
+    <!-- 模糊查询文章数量  -->
+	<select id="selectWenZhangNumMoHu" parameterType="String" resultType="int">		
+		SELECT count(*) from WenZhang WHERE wZTitle LIKE '%${_parameter}%'	
+	</select>  
+	
+	<!-- 展示某类别的文章列表  -->
+	<select id="selectWenZhangListByBiaoQian" parameterType="java.util.Map" resultMap="resMap_WenZhang">
+		SELECT s2.* from(		
+		SELECT rownum rn,s1.* FROM(
+			SELECT
+			w.wZId,
+			w.wZTitle,
+			w.headImg,
+			w.usId as uusId,
+			u.usName,
+			u.head,
+			w.wZText,
+			w.WZJJ,
+			w.wZState,
+			w.YC,
+			w.wZurl,
+			w.fBTime,
+			w.see,
+			w.zan,
+			w.biaoQian,
+			w.qt1,
+			w.qt2,
+			w.qt3
+			from WenZhang w,Users u WHERE w.usId=u.usId and w.BiaoQian LIKE '%${biaoQian}%' ORDER BY w.fbtime DESC
+			) s1 ) s2
+		WHERE s2.rn BETWEEN ${begin1} AND ${end1}	
+	</select>   
+		
+	<!-- 查询某类别的文章数量  -->
+	<select id="selectWenZhangListNumByBiaoQian" parameterType="String" resultType="int">		
+		SELECT count(*) from WenZhang WHERE BiaoQian LIKE '%${_parameter}%'	
+	</select>     
+    
+	<resultMap id="resMap_WenZhang"	type="WenZhang">
+		<id property="wZId" column="wZId" />
+		<result property="wZTitle" column="wZTitle" />
+		<result property="wZText" column="wZText" />
+		<result property="headImg" column="headImg" />		
+		<result property="WZJJ" column="WZJJ" />
+		<result property="wZState" column="wZState" />
+		<result property="YC" column="YC" />
+		<result property="wZurl" column="wZurl" />
+		<result property="fBTime" column="fBTime" />
+		<result property="see" column="see" />
+		<result property="zan" column="zan" />
+		<result property="biaoQian" column="biaoQian" />
+		<result property="qt1" column="qt1" />
+		<result property="qt2" column="qt2" />
+		<result property="qt3" column="qt3" />
+		<association property="users" javaType="Users" column="usId">
+			<id property="usId" column="uusId"/>
+			<result property="usName" column="usName"/>
+			<result property="head" column="head"/>
+		</association>
+	</resultMap>
+		
+	
+    <!--  通过一个对象模糊查询招聘信息列表     
+	<select id="selectMoHuZpjobs" resultMap="zpjSimple" parameterType="com.pansang.entity.MoHuModel"> 
+		select
+		z.zpId,
+		q.qyId as zid, 
+		jobType, 
+		z.num,
+		z.zwId as zzwid, 
+		h.hyId as hid,
+		workTime, 
+		workAddress,
+		xueLi,
+		tell, 
+		fuZeRen,
+		zpMoney, 
+		zpStart,
+		zpEnd,
+		jobText,
+		q.name as zname,
+		w.name as wname,
+		h.name as hname
+		from ZPJob as z,QiYe q,ZhiWu w,HangYe h where 
+			z.qyId=q.qyId and z.zwId=w.zwId and q.hyId=h.hyId 
+			<if test="gwname!=null">			
+				and jobType like #{gwname}			
+			</if>
+			<if test="hyId!=0">
+				and h.hyId = #{hyId}
+			</if>
+			<if test="address!=null">
+				and workAddress = #{address}
+			</if>
+			<if test="time!=null">
+				and zpStart like #{time}
+			</if> 
+			<if test="lessMoney!=0">
+				and SUBSTRING(zpMoney,0,charIndex('-',zpMoney)) > #{lessMoney}-1
+			</if>  
+			<if test="moreMoney!=0">
+				and #{moreMoney} > SUBSTRING(zpMoney,charIndex('-',zpMoney)+1,5)-1
+			</if>
+    </select>-->
+           
+
+    <!--  多条记录集合设置 
+    <resultMap type="WenZhangList" id="WZSimple">
+    	<id column="zpId" property="zpId"/>    	   	
+    	<result column="jobType" property="jobType"/>
+    	<result column="workTime" property="workTime"/>
+    	<result column="workAddress" property="workAddress"/>
+    	<result column="xueLi" property="xueLi"/>
+    	<result column="tell" property="tell"/>
+    	<result column="fuZeRen" property="fuZeRen"/>
+    	<result column="num" property="num"/>
+    	<result column="sex" property="sex"/>
+    	<result column="zpMoney" property="zpMoney"/>
+    	<result column="zpStart" property="zpStart"/>
+    	<result column="zpEnd" property="zpEnd"/>
+		<result column="jobText" property="jobText"/>
+		<association property="zhiWu" javaType="ZhiWu" column="zzwid">
+			<id column="zzwid" property="zwId"/>
+			<result column="wname" property="name"/>
+		</association>
+		<association property="qiYe" javaType="QiYe" column="zid" >
+			<id column="zid" property="qyId"/>
+			<result column="zname" property="name"/>
+			<result column="qyText" property="qyText"/>
+			<association property="hangYe" javaType="HangYe" column="hid" >
+				<id column="hid" property="hyId"/>
+				<result column="hname" property="name"/>			
+			</association>
+		</association>	
+    </resultMap>-->
+     
+</mapper>

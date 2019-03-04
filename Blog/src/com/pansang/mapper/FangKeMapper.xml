@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 映射器名字空间，即BlogMapper对象的完整路径名 -->
+<mapper namespace="com.pansang.mapper.FangKeMapper">	
+		
+	<!--  新增记录  -->
+	<insert id="insertFangKe" parameterType="com.pansang.entity.FangKe" useGeneratedKeys="false" keyProperty="fKId">
+		<selectKey resultType="Integer" keyProperty="fKId" order="AFTER" >
+			SELECT SEQ_FangKe.CURRVAL AS FKId from dual
+	    </selectKey>
+		insert into FangKe( FKName,  Head,  Email,  CJTime,  QuDao,  FKIP)
+			values( #{fKName},  #{head},  #{email}, sysdate,  '平台',#{FKIP}) 		
+    </insert>
+    
+    <!--  修改下载数  -->
+    <update id="updateFangKe" parameterType="com.pansang.entity.FangKe">
+    	update WenZhang
+    	<set>        		    		  
+    		<if test="fKName!=null">    			
+				FKName = #{fKName},		
+			</if>
+			<if test="head!=null">
+				Head = #{head},
+			</if>
+			<if test="email!=null">    			
+				Email = #{email},				
+			</if>
+			<if test="FKIP!=null">    			
+				FKIP = #{FKIP},				
+			</if>											  			    			
+				CJTime = sysdate				
+		</set>
+		where FKId= #{fKId}       	
+    </update>
+     
+    <!--  根据文章ID搜索附件  -->
+	<select id="selectFangKeByIP" parameterType="String" resultType="com.pansang.entity.FangKe"> 
+		select
+  			FKId,      
+       		FKName,
+       		Head,
+       		Email,
+       		CJTime,
+       		QuDao,
+       		FKIP       		
+		from FangKe where FKIP = #{FKIP}  
+    </select>
+     
+</mapper>

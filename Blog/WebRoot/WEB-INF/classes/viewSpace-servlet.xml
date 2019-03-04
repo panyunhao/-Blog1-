@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:mvc="http://www.springframework.org/schema/mvc"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/context 
+			http://www.springframework.org/schema/context/spring-context-3.2.xsd
+			http://www.springframework.org/schema/beans 
+			http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+			http://www.springframework.org/schema/mvc 
+			http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+			http://www.springframework.org/schema/aop 
+			http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+			http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+	
+	<!-- 注解驱动 -->
+    <mvc:annotation-driven>
+		<!-- 指定http返回编码格式，不然返回ajax请求json会出现中文乱码 -->
+		<mvc:message-converters>
+		<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+			<property name="supportedMediaTypes">
+				<list>
+					<value>text/html;charset=UTF-8</value>
+					<value>application/json;charset=UTF-8</value>
+					<value>*/*;charset=UTF-8</value>
+				</list>
+			</property>
+		</bean>
+		</mvc:message-converters>
+    </mvc:annotation-driven>
+	<context:component-scan base-package="com.pansang" />
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:orcl"/>
+        <property name="username" value="pansang"></property>
+        <property name="password" value="q290108669"></property>
+	</bean>
+	
+	<bean id="sqlSessionFactory"      
+        class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+        <property name="dataSource" ref="dataSource"></property>
+	</bean>	
+	
+    <!-- 实体类相关 -->
+    <bean id="DianZanMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+       <property name="mapperInterface" value="com.pansang.mapper.DianZanMapper" />
+       <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="FangKeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+       <property name="mapperInterface" value="com.pansang.mapper.FangKeMapper" />
+       <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="FuJianMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+       <property name="mapperInterface" value="com.pansang.mapper.FuJianMapper" />
+       <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+        
+    <bean id="JianYiMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+       <property name="mapperInterface" value="com.pansang.mapper.JianYiMapper" />
+       <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="LiuLanMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+       <property name="mapperInterface" value="com.pansang.mapper.LiuLanMapper" />
+       <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="LiuYanMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+       <property name="mapperInterface" value="com.pansang.mapper.LiuYanMapper" />
+       <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="UsersMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+       <property name="mapperInterface" value="com.pansang.mapper.UsersMapper" />
+       <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="wenZhangMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+       <property name="mapperInterface" value="com.pansang.mapper.WenZhangMapper" />
+       <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+	
+	
+	
+	<!-- 设置上传文件最大值   50M=50*1024*1024(B)=5242880 bytes -->  
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+    	<property name="maxUploadSize" value="5242880" />  
+	</bean>
+
+	
+	
+	<bean id="validator"
+  		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+    </bean>	
+</beans>

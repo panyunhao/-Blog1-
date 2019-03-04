@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 映射器名字空间，即BlogMapper对象的完整路径名 -->
+<mapper namespace="com.pansang.mapper.DianZanMapper">	
+		
+	<!--  新增记录  -->
+	<insert id="insertDianZan" parameterType="com.pansang.entity.DianZan">
+		insert into DianZan( WZId,  LYId,  JYId,  DZIP,  State)
+       		values( 
+       		<if test="wZId==0"> null,</if>
+			<if test="wZId!=0"> #{wZId},</if>
+       		<if test="lYId==0"> null,</if>
+			<if test="lYId!=0"> #{lYId},</if>
+			<if test="jYId==0"> null,</if>
+			<if test="jYId!=0"> #{jYId},</if>    			 
+			#{DZIP}, 1)		    	   		
+    </insert>
+
+    <!--  修改点赞状态  -->
+    <update id="updatedianZanState" parameterType="com.pansang.entity.DianZan">
+    	update DianZan 
+    	set State = #{state,jdbcType=NUMERIC}
+		where DZIP=#{DZIP,jdbcType=VARCHAR}
+		<if test="wZId!=0"> and wZId=#{wZId,jdbcType=NUMERIC}</if>
+		<if test="lYId!=0"> and lYId=#{lYId,jdbcType=NUMERIC}</if>
+		<if test="jYId!=0"> and JYId=#{jYId,jdbcType=NUMERIC}</if>		 
+    </update>
+
+    <select id="selectDianZanState" parameterType="com.pansang.entity.DianZan" resultType="com.pansang.entity.DianZan"> 		
+		SELECT * from DianZan WHERE
+			<if test="wZId!=0">
+				WZId = #{wZId} 
+			</if>
+			<if test="lYId!=0">
+				LYId = #{lYId}
+			</if>
+			<if test="jYId!=0">
+				JYId = #{jYId}
+			</if>
+				and DZIP=#{DZIP}
+    </select>
+</mapper>

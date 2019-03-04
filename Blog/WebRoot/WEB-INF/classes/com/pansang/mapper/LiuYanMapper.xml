@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 映射器名字空间，即BlogMapper对象的完整路径名 -->
+<mapper namespace="com.pansang.mapper.LiuYanMapper">	
+		
+	<!--  新增记录  -->
+	<insert id="insertLiuYan" parameterType="com.pansang.entity.LiuYan"  useGeneratedKeys="false" keyProperty="lYId">
+		<selectKey resultType="Integer" keyProperty="lYId" order="AFTER" >
+			SELECT SEQ_LiuYan.CURRVAL AS lYId from dual
+	    </selectKey>
+		insert into LiuYan( WZId,  FId,  FKId,  FKName,  Head,  LYText,  Zan,  LYTime)
+       		values( #{wZId},
+       		<if test="fId!=0">
+       			#{fId} ,        		
+       		</if> 
+       		<if test="fId==0">
+       			null ,        		
+       		</if>
+       		 #{fKId},  #{fKName}, #{head}, #{lYText}, 0,sysdate )		    	   		
+    </insert>
+
+    <!--  增加点赞数  -->
+    <update id="dianZanLiuYan" parameterType="int">
+    	update LiuYan set
+			 Zan = Zan+1
+		where LYId = #{lYId}
+    </update>
+
+    <!--  取消点赞  -->
+    <update id="quXiaodianZanLiuYan" parameterType="int">
+    	update LiuYan set
+			 Zan = Zan-1
+		where LYId = #{lYId}	    	       	
+    </update>
+    
+    <select id="selectLiuYanFenYe" parameterType="java.util.Map" resultType="LiuYan"> 
+		SELECT s2.* from(		
+		SELECT rownum rn,s1.* FROM(
+		SELECT
+			LYId,
+  			WZId,
+  			FId,  
+  			FKId,  
+  			FKName,  
+  			Head,  
+  			LYText,  
+  			Zan,  
+  			LYTime
+			from LiuYan where WZId=#{wZId} and FId is null ORDER BY LYTime DESC
+			) s1 ) s2
+		WHERE s2.rn BETWEEN ${begin1} AND ${end1}
+    </select>
+        
+    <select id="selectLiuYanNumByWZId" parameterType="int" resultType="int"> 		
+		SELECT count(*) from LiuYan where WZId=#{wZId} and FID is null		
+    </select>
+    
+    <select id="selectLiuYanMore" parameterType="java.util.Map" resultType="LiuYan"> 
+		SELECT
+			LYId,
+  			WZId,
+  			FId,  
+  			FKId,  
+  			FKName,  
+  			Head,  
+  			LYText,  
+  			Zan,  
+  			LYTime
+			from LiuYan where WZId=#{wZId} and FId =#{lYId} ORDER BY LYTime DESC
+    </select>
+    
+</mapper>

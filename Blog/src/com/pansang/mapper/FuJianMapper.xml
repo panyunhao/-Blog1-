@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 映射器名字空间，即BlogMapper对象的完整路径名 -->
+<mapper namespace="com.pansang.mapper.FuJianMapper">	
+		
+	<!--  新增记录  -->
+	<insert id="insertFuJian" parameterType="com.pansang.entity.FuJian" useGeneratedKeys="false" keyProperty="fJId">	
+		<selectKey resultType="Integer" keyProperty="fJId" order="AFTER" >
+			SELECT SEQ_FuJian.CURRVAL AS FJId from dual
+	    </selectKey>	
+    	insert into FuJian(FJName,WZId,UsId,FJurl,FJLX,SCSJ,DLnum)
+       		values(#{fJName},
+       		<if test="wZId==0"> null,</if>
+			<if test="wZId!=0"> #{wZId},</if>
+       		<if test="usId==0"> null,</if>
+			<if test="usId!=0"> #{usId},</if>       		
+       		#{fJurl},#{FJLX},#{SCSJ},0)       		
+    </insert>
+    
+    <!--  修改下载数  -->
+    <update id="updateFuJian" parameterType="int">
+    	update FuJian
+		set  DLnum= DLnum+1
+		where FJId = #{fjId}		  		    	       	
+    </update>
+    
+    <!--  删除记录  -->
+	<delete id="deleteFuJian" parameterType="int">		
+		delete from FuJian where FJId=#{fjId}      	
+    </delete>         
+    
+	<!--  根据文章ID搜索附件  -->
+	<select id="selectFuJianByWZId" parameterType="int" resultType="com.pansang.entity.FuJian"> 
+		select
+  		FJId,
+  		FJName,
+  		WZId,
+  		UsId,
+  		FJurl,
+  		FJLX,
+  		SCSJ,
+  		DLnum,
+  		qt1,
+		qt2,
+  		qt3
+		from FuJian t where WZId=#{wZId}  
+    </select>
+    
+    <!--  根据用户ID搜索附件  -->
+	<select id="selectFuJianByUSId" parameterType="int" resultType="com.pansang.entity.FuJian"> 
+		select
+  		FJId,
+  		FJName,
+  		WZId,
+  		UsId,
+  		FJurl,
+  		FJLX,
+  		SCSJ,
+  		DLnum,
+  		qt1,
+		qt2,
+  		qt3
+		from FuJian t where UsId=#{usId}  
+    </select>
+    
+    <!--  根据附件ID搜索附件  -->
+	<select id="selectFuJianByFJId" parameterType="int" resultType="com.pansang.entity.FuJian"> 
+		select
+  		FJId,
+  		FJName,
+  		WZId,
+  		UsId,
+  		FJurl,
+  		FJLX,
+  		SCSJ,
+  		DLnum,
+  		qt1,
+		qt2,
+  		qt3
+		from FuJian t where FJId=#{fJId}  
+    </select>
+    
+     
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 映射器名字空间，即BlogMapper对象的完整路径名 -->
+<mapper namespace="com.pansang.mapper.JianYiMapper">	
+		
+	<!--  新增记录  -->
+	<insert id="insertJianYi" parameterType="com.pansang.entity.JianYi"  useGeneratedKeys="false" keyProperty="jYId">
+		<selectKey resultType="Integer" keyProperty="jYId" order="AFTER" >
+			SELECT SEQ_JianYi.CURRVAL AS JYId from dual
+	    </selectKey>
+		insert into JianYi( UsName,  Head,  Email,  LYText, JYTIME , Zan)
+       		values( #{usName}, #{head} ,  #{email},  #{lYText}, sysdate , 0)		    	   		
+    </insert>
+
+    <!--  增加点赞数  -->
+    <update id="dianZanJianYi" parameterType="int">
+    	update JianYi set
+			 Zan = Zan+1
+		where JYId = #{jYId}
+    </update>
+
+    <!--  取消点赞  -->
+    <update id="quXiaodianZanJianYi" parameterType="int">
+    	update JianYi set
+			 Zan = Zan-1
+		where JYId = #{jYId}	    	       	
+    </update>
+    
+    <select id="selectJianYiFenYe" parameterType="java.util.Map" resultType="JianYi"> 
+		SELECT s2.* from(		
+		SELECT rownum rn,s1.* FROM(
+		SELECT
+			JYId,
+  			UsName,
+  			Head,
+  			Email,
+  			LYText,
+  			JYTime,
+  			Zan,
+  			qt1,
+  			qt2
+			from JianYi ORDER BY JYTime DESC
+			) s1 ) s2
+		WHERE s2.rn BETWEEN ${begin1} AND ${end1}
+    </select>
+        
+    <!-- 查询某类别的文章数量  -->
+	<select id="selectJianYiNum" resultType="int">		
+		SELECT count(*) from JianYi	
+	</select>
+</mapper>

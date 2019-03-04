@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<!-- 映射器名字空间，即BlogMapper对象的完整路径名 -->
+<mapper namespace="com.pansang.mapper.UsersMapper">		
+    
+    <!--  修改记录  -->
+	<update id="updateUsers" parameterType="com.pansang.entity.Users">
+    	update Users
+    	<set>        		    							
+			JiFen = #{jiFen},
+			CJTime = sysdate 						
+    	</set>
+		where UsId=#{usId}
+    </update>
+    
+	<!--  查询单条记录 -->
+	<select id="selectUsersByZhangHao"  parameterType="java.util.Map" resultType="com.pansang.entity.Users"> 
+		select
+		UsId,
+  		ZhangHao,
+  		MiMa,
+  		UsName,
+  		JiFen,
+  		CJTime,
+  		QuDao,
+  		Email,
+  		Head,
+  		qt1,
+  		qt2,
+  		qt3
+		from Users where ZhangHao=#{zhangHao} and MiMa=#{miMa}
+    </select>
+     
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>    
+	<typeAliases>
+		<!--配置数据类型的别名-->
+		<typeAlias type="com.pansang.entity.DianZan"  alias="DianZan"/>
+		<typeAlias type="com.pansang.entity.FangKe"  alias="FangKe"/>
+		<typeAlias type="com.pansang.entity.FuJian"  alias="FuJian"/>
+		<typeAlias type="com.pansang.entity.JianYi"  alias="JianYi"/>
+		<typeAlias type="com.pansang.entity.LiuLan"  alias="LiuLan"/>
+		<typeAlias type="com.pansang.entity.LiuYan"  alias="LiuYan"/>	
+		<typeAlias type="com.pansang.entity.Users"  alias="Users"/>
+		<typeAlias type="com.pansang.entity.WenZhang"  alias="WenZhang"/>
+	</typeAliases>	
+	
+	<mappers>
+		<!-- 配置映射文件 -->
+		<mapper resource="com/pansang/mapper/DianZanMapper.xml"/>
+		<mapper resource="com/pansang/mapper/FangKeMapper.xml"/>
+		<mapper resource="com/pansang/mapper/FuJianMapper.xml"/>
+		<mapper resource="com/pansang/mapper/JianYiMapper.xml"/>
+		<mapper resource="com/pansang/mapper/LiuLanMapper.xml"/>
+		<mapper resource="com/pansang/mapper/LiuYanMapper.xml"/>				
+		<mapper resource="com/pansang/mapper/UsersMapper.xml"/>
+		<mapper resource="com/pansang/mapper/WenZhangMapper.xml"/>		
+	</mappers>
+</configuration>
